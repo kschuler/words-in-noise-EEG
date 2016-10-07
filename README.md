@@ -6,4 +6,4 @@ Forthcoming…
 
 
 ## Issues and progress
-To create an issue or track progress, visit the [issues page.](https://github.com/kschuler/words-in-noise-EEG/issues)
+To create an issue or track progress, visit the [issues page](https://github.com/kschuler/words-in-noise-EEG/issues).
