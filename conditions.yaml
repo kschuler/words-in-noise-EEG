@@ -1,0 +1,93 @@
+---
+baseline:
+    Auditory:
+        easy:
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+        hard:
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+    Visual:
+        easy:
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+        hard:
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+    Environmental:
+        easy:
+            sheep: [sheep, cow, rooster, fish]
+            cow: [cow, sheep, rooster, fish]
+            rooster: [rooster, cow, sheep, fish]
+            sheep: [sheep, cow, rooster, fish]
+            cow: [cow, sheep, rooster, fish]
+            rooster: [rooster, cow, sheep, fish]
+        hard:
+            sheep: [sheep, cow, rooster, fish]
+            cow: [cow, sheep, rooster, fish]
+            rooster: [rooster, cow, sheep, fish]
+            sheep: [sheep, cow, rooster, fish]
+            cow: [cow, sheep, rooster, fish]
+            rooster: [rooster, cow, sheep, fish]
+main:
+    Auditory:
+        easy:
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+        hard:
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+    Visual:
+        easy:
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+        hard:
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+            coffee: [coffee, juice, hug, dog]
+            action: [action, juice, hug, dog]
+            bead: [bead, juice, hug, dog]
+    Environmental:
+        easy:
+            sheep: [sheep, cow, rooster, fish]
+            cow: [cow, sheep, rooster, fish]
+            rooster: [rooster, cow, sheep, fish]
+            sheep: [sheep, cow, rooster, fish]
+            cow: [cow, sheep, rooster, fish]
+            rooster: [rooster, cow, sheep, fish]
+        hard:
+            sheep: [sheep, cow, rooster, fish]
+            cow: [cow, sheep, rooster, fish]
+            rooster: [rooster, cow, sheep, fish]
+            sheep: [sheep, cow, rooster, fish]
+            cow: [cow, sheep, rooster, fish]
+            rooster: [rooster, cow, sheep, fish]

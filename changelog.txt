@@ -1,0 +1,3 @@
+10-07-2016
+- experiment parameters have been moved to a separate .yaml file (params.yaml)
+- updated naming convention to use ALL_CAPS for initialized stims and lower_case for functions written by Katie
