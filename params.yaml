@@ -46,13 +46,13 @@ method:
             rest after blocks: [1, 3]
     timing:
         block title screen: 1.0             # how long in seconds is the block title screen?
-        intertrial interval: 2.0            # how long in seconds is the intertrial interval?
-        stimulus presentation window: 3.0   # how long in seconds is the stimulus presentation window?
+        intertrial interval: 2.0            # how long in seconds is the intertrial interval? (here is where you load stims)
+        stimulus presentation window: 4.0   # ***** how long in seconds is the stimulus presentation window?
         prestimulus period: 1.0             # how long in seconds is the prestimulus period
         post stimulus waiting period: 1.0   # how long in seconds is the post stimulus waiting period?
         rest block duration: 2.0            # how long in seconds is the rest block duration?
-        stimulus offset buffer: 1.0         # how longer is seconds is the stimulus offset buffer?
-        frames to fade movie: 15            # how many frames should we fade the movie for?
+        stimulus offset buffer: 1.0         #  ***** how longer is seconds is the stimulus offset buffer?
+        frames to fade movie: 60            #  *****   how many frames should we fade the movie for?
         answer choice timeout: 3.0          # how long before we timeout the answer choice?
 
 stimuli:
@@ -87,10 +87,11 @@ stimuli:
         color: gray
         font: Arial
     image mask:
-        tex: None
-        mask: None
-        size: 256
+        tex: 256
+        mask: 'gauss'               # what do you want the mask to be?  'gauss' gives gabor; 'circle' gives circular patch
+        size: [300, 400]
         units: pix
+        array size: [32, 32]              #
     movie:
         pos: [0,0]
         size: [720, 400]
@@ -131,7 +132,7 @@ staircases:
                 label: easy                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Auditory         # the condition we are doing (for marking data)
                 startVal: 1.0              # a number; the initial value of the staircase
-                stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepSizes: 4               # the size of steps (how much intensity to go up per step)
                 nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values

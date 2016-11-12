@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-####
-# figure out what to do about sounds
-# jitter the start time
-####
 """
 WORDS IN NOISE EEG EXPERIMENT
 for Kelly (Turkeltaub Lab)
@@ -15,9 +11,9 @@ PsychoPy Version: 1.84.1
 
 Written by: Kathryn Schuler (kathryn.schuler@gmail.com)
 Written on: 09/29/2016
-Last Updated: 10/07/2016
+Last Updated: 11/11/2016
 
-Expeirment version: 2.0
+Expeirment version: 2.1
 """
 
 """
@@ -113,16 +109,16 @@ class WordsInNoiseEEG(object):
             font            = PARAMS['stimuli']['fixation cross']['font']
         )
         self.IMAGE_MASK = visual.GratingStim(self.EXP_WINDOW,
-            tex             = PARAMS['stimuli']['image mask']['tex'],
+            texRes             = PARAMS['stimuli']['image mask']['tex'],
             mask            = PARAMS['stimuli']['image mask']['mask'],
             size            = PARAMS['stimuli']['image mask']['size'],
             units           = PARAMS['stimuli']['image mask']['units'],
         )
-        self.WORD = sound.Sound(value = 'Sounds/pinknoise.wav',
+        self.STIMULUS_SOUND = sound.Sound(value = 'Sounds/pinknoise.wav',
             sampleRate = PARAMS['stimuli']['word']['sampleRate']
         )
-        self.NOISE = sound.Sound(value = 'Sounds/pinknoise.wav',
-            sampleRate = PARAMS['stimuli']['noise']['sampleRate']
+        self.THIS_TRIAL_SOUND = sound.Sound(value = 'Sounds/pinknoise.wav',
+            sampleRate = PARAMS['stimuli']['word']['sampleRate']
         )
         self.LEFT_ANSWER = visual.TextStim(self.EXP_WINDOW,
             text            = '',
@@ -156,8 +152,6 @@ class WordsInNoiseEEG(object):
             color           = PARAMS['stimuli']['answers']['down']['color'],
             font            = PARAMS['stimuli']['answers']['down']['font']
         )
-
-
 
     def run_experiment(self):
 
@@ -198,11 +192,11 @@ class WordsInNoiseEEG(object):
 
     def do_task(self, which_staircase):
 
-        # if this is the main task loop, pull the values from the baseline staircases
+        # if this is the main staircase, pull the values from the baseline staircases
         # to use as start values in the main staircase
         if which_staircase == 'main staircase':
             self.get_baseline_thresholds()
-        
+
         # create a variable to hold what block number we are on
         this_block = 0
 
@@ -242,15 +236,20 @@ class WordsInNoiseEEG(object):
                 # tell the data handler that we are finshed with that trial and about to start a new trial
                 self.EXPERIMENT_DATA.nextEntry()
 
+                # if somebody presses escape on any trial, quit the experiment
+                if event.getKeys(PARAMS['devices']['keyboard']['keys quit']): self.end_experiment()
+
+            # if this is a block we are supposed to take a rest after, do so
             if this_block in PARAMS['method']['reps'][which_staircase]['rest after blocks']:
                 self.do_rest_period()
 
 
     def end_experiment(self):
+
+        # this is just a cleanup function that closes the experiemnt
+        # window and quits psychopy
         self.EXP_WINDOW.close()
         core.quit()
-        pass
-
 
     def randomize_blocks(self, which_staircase):
 
@@ -300,7 +299,7 @@ class WordsInNoiseEEG(object):
                         nTrials = PARAMS['method']['reps'][staircase]['trials per staircase']
                         # name = staircase+" "+condition
                         )})
-                        
+
 
 
     def intertrial_interval(self, trial_volume, trial_params):
@@ -336,8 +335,8 @@ class WordsInNoiseEEG(object):
         self.DIFFICULTY_TEXT.draw()
         self.EXP_WINDOW.flip()
 
-        # start playing the pink noise
-        self.NOISE.play()
+        # start playing the mixed sound file
+        self.STIMULUS_SOUND.play()
 
         # stop the precise timer and save whether it was accurate on this trial
         timer_accuracy = self.stop_precise_timer()
@@ -354,10 +353,10 @@ class WordsInNoiseEEG(object):
         self.jitter_start_time()
 
         # fade in the stim depending on what we have got.
-        self.fade_in_movie()
+        # self.fade_in_stimulus()
 
         # send the trigger here probably
-        self.send_ttl_trigger()
+        self.send_ttl_trigger('stim presentation window')
 
         # play the movie and/or sound and/or noisemask
         self.play_stimulus()
@@ -412,34 +411,44 @@ class WordsInNoiseEEG(object):
         except TypeError:
             selection, RT, this_choice = ['NA'] * 3
             is_correct = False
-            
+
         # add the data we have collected to the data manager
         self.EXPERIMENT_DATA.addData('correct_answer', self.TRIAL_SOUND)
         self.EXPERIMENT_DATA.addData('answer_choice_position', selection)
         self.EXPERIMENT_DATA.addData('answer_choice', this_choice)
         self.EXPERIMENT_DATA.addData('is_correct', is_correct)
         self.EXPERIMENT_DATA.addData('RT', RT)
-        
+
         return is_correct
 
 
     def play_stimulus(self):
         # if we are at the movie, play it.  otherwise draw noise
-        self.MOVIE.seek(0.0)
-        self.MOVIE.setVolume(0.0)
+        if self.CONDITION == "Visual":
+            self.MOVIE.seek(0.0)
+            self.MOVIE.setVolume(0.0)
 
-        # play the word and the movie at the same time
-        self.WORD.play()
-        self.MOVIE.play()
+            # play the word and the movie at the same time
+            # self.WORD.play()
+            self.MOVIE.play()
 
-        # while the movie is still playing, draw it (and the mask if needed)
-        while self.MOVIE.status != visual.FINISHED:
-            self.MOVIE.draw()
-            # if it is not a visual trial, show the noise mask
+            # while the movie is still playing, draw it (and the mask if needed)
+            while self.MOVIE.status != visual.FINISHED:
+                self.MOVIE.draw()
+                # if it is not a visual trial, show the noise mask
+                self.EXP_WINDOW.flip()
+
+        else:
+            # play the word and the image mask at the same time
+            # self.WORD.play()
+            self.IMAGE_MASK.draw()
             self.EXP_WINDOW.flip()
 
 
     def preload_stimulus(self, trial_volume, trial_params):
+
+        # this function preloads the stimuli necessary for the trial.  Note that it always loads the corresponding video
+        # and an image mask to make it equal for both trials.  But it only uses one later on.
 
         # randomly choose a sound the play from the remaining trials in this staircase
         remaining_trials = self.STIMS[trial_params['staircase']][trial_params['condition']][trial_params['label']]
@@ -458,19 +467,34 @@ class WordsInNoiseEEG(object):
         )
         self.MOVIE.setVolume(0.0)
 
-        # load the sound and set the volume
-        self.WORD.setSound('Sounds/'+trial_params['condition']+'/'+trial_params['label']+'/'+self.TRIAL_SOUND+'.wav')
-        self.WORD.setVolume(0.5)
+        # load the image mask
+        self.IMAGE_MASK.setTex(numpy.random.random((32,32)))
 
-        # load the pink noise and set the volume to full
-        self.NOISE.setSound('Sounds/pinknoise.wav')
-        self.NOISE.setVolume(1.0)
+        # pull the actual sound file to retrieve duration
+        which_sound_file = 'Sounds/'+trial_params['condition']+'/'+trial_params['label']+'/'+self.TRIAL_SOUND+'.wav'
 
         # get the duration of the sound and calculate jitter
-        self.calculate_jitter(self.WORD.getDuration())
+        self.THIS_TRIAL_SOUND.setSound(which_sound_file)
+        self.calculate_jitter(self.THIS_TRIAL_SOUND.getDuration())
+
+        # mix the sounds
+        self.mix_sound_sox(noise_file = 'Sounds/noise.wav',
+            noise_volume = 1.0,
+            stimulus_file = 'Sounds/'+trial_params['condition']+'/'+trial_params['label']+'/'+self.TRIAL_SOUND+'.wav',
+            stimulus_volume = trial_volume)
+
+        # preload the output sound and set it to full volume
+        self.STIMULUS_SOUND.setSound('Sounds/mixed_sound_output.wav')
+        self.STIMULUS_SOUND.setVolume(1.0)
+
 
         print trial_volume, trial_params
 
+
+    def mix_sound_sox(self, noise_file, noise_volume, stimulus_file, stimulus_volume):
+        stimulus_padding = PARAMS['method']['timing']['prestimulus period'] + self.RANDOM_ONSET_TIME
+        print stimulus_padding
+        os.system('sox -V --combine mix -v '+str(noise_volume)+' '+noise_file+' -v '+str(stimulus_volume)+' "|sox '+stimulus_file+' -p pad '+str(stimulus_padding)+' " Sounds/mixed_sound_output.wav')
 
 
     def start_precise_timer(self, duration):
@@ -514,7 +538,7 @@ class WordsInNoiseEEG(object):
         #     print "Sorry, the current stimulus is too long to play in the stimulus presentation window"
         # while we are waiting, add the actual onset and offset times to the data filename
         self.EXPERIMENT_DATA.addData('actual_onset_time', self.RANDOM_ONSET_TIME)
-        self.EXPERIMENT_DATA.addData('actual_offset_time', self.RANDOM_ONSET_TIME + self.WORD.getDuration())
+        self.EXPERIMENT_DATA.addData('actual_offset_time', self.RANDOM_ONSET_TIME + self.THIS_TRIAL_SOUND.getDuration())
 
         print self.RANDOM_ONSET_TIME
 
@@ -525,11 +549,13 @@ class WordsInNoiseEEG(object):
         core.wait(self.RANDOM_ONSET_TIME)
 
 
-    def fade_in_movie(self):
+    def fade_in_stimulus(self):
 
         # start the opacity at 0 and get the number of frames to fade the movie over
         opacity = 0.0
-        nFrames = PARAMS['method']['timing']['frames to fade movie']
+        nFrames = 30
+
+        print "number of frames ", nFrames
 
         # start playing the movie but pause on the first frame
         self.MOVIE.play()
@@ -551,34 +577,30 @@ class WordsInNoiseEEG(object):
         self.EXP_WINDOW.flip()
         core.wait(PARAMS['method']['timing']['rest block duration'])
 
-    def send_ttl_trigger(self):
-
+    def send_ttl_trigger(self, name = None):
+        print name
         # this is not doing anything yet; here is where you would add the code to
         # send the ttl trigger.  It is likely very short, just a few lines
-        # and you'll need to use psychopy's parrallellibrary to send it
+        # and you'll need to use psychopy's parallel library to send it
         pass
-        
+
     def get_baseline_thresholds(self):
-        
+
         thresholds = {}
-        
+
         for condition in PARAMS['method']['conditions']:
             easy, hard = self.STAIRCASE_HANDLER['baseline staircase'][condition].staircases
             thresholds[condition] = {'easy': easy.intensities[-1], 'hard': hard.intensities[-1]}
-         
+
         for condition in PARAMS['method']['conditions']:
             easy, hard = self.STAIRCASE_HANDLER['main staircase'][condition].conditions
             print easy, hard
             easy['startVal'] = thresholds[condition]['easy']
             hard['startVal'] = thresholds[condition]['hard']
-            
+
             print easy, hard
             print self.STAIRCASE_HANDLER['main staircase'][condition].conditions
-#            print thresholds[condition]['easy'], thresholds[condition]['hard']
-#            print easy.startVal, hard.startVal
-#            
-#        print thresholds
-#        print self.STAIRCASE_HANDLER
+
 
 
 exp = WordsInNoiseEEG()

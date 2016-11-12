@@ -1,3 +1,9 @@
 10-07-2016
 - experiment parameters have been moved to a separate .yaml file (params.yaml)
 - updated naming convention to use ALL_CAPS for initialized stims and lower_case for functions written by Katie
+
+
+11-11-2016
+- added an escape function at each trial (escape before answer choices quits)
+- added an image mask
+- fixed audio mixing (now using SOX library)
