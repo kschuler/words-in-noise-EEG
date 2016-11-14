@@ -7,3 +7,6 @@
 - added an escape function at each trial (escape before answer choices quits)
 - added an image mask
 - fixed audio mixing (now using SOX library)
+
+11-14-2016
+- fixed image fade_in.  required reloading movie file so it could start at beginning and be time aligned.
