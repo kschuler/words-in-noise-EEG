@@ -52,7 +52,8 @@ method:
         post stimulus waiting period: 1.0   # how long in seconds is the post stimulus waiting period?
         rest block duration: 2.0            # how long in seconds is the rest block duration?
         stimulus offset buffer: 1.0         #  ***** how longer is seconds is the stimulus offset buffer?
-        frames to fade movie: 60            #  *****   how many frames should we fade the movie for?
+        frames to fade movie: 30            #  *****   how many frames should we fade the movie for?
+        fade movie buffer: 0.5              # how long in seconds do you want to devote to fading in the movie?
         answer choice timeout: 3.0          # how long before we timeout the answer choice?
 
 stimuli:

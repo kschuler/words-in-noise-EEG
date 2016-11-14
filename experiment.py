@@ -152,6 +152,13 @@ class WordsInNoiseEEG(object):
             color           = PARAMS['stimuli']['answers']['down']['color'],
             font            = PARAMS['stimuli']['answers']['down']['font']
         )
+        # load the movie and make sure the volume is 0.
+        self.MOVIE = visual.MovieStim2(self.EXP_WINDOW,
+            filename ='Movies/action.mov',
+            volume = 0.0,
+            pos = PARAMS['stimuli']['movie']['pos'],
+            size = PARAMS['stimuli']['movie']['size']
+        )
 
     def run_experiment(self):
 
@@ -326,6 +333,9 @@ class WordsInNoiseEEG(object):
         # start the precise timer
         self.start_precise_timer(PARAMS['method']['timing']['prestimulus period'])
 
+        # start playing the mixed sound file
+        self.STIMULUS_SOUND.play()
+
         # set which text will appear on the screen
         if trial_params['label'] == 'easy': diff_text = 'E'
         else: diff_text = 'H'
@@ -334,9 +344,6 @@ class WordsInNoiseEEG(object):
         self.DIFFICULTY_TEXT.setText(diff_text)
         self.DIFFICULTY_TEXT.draw()
         self.EXP_WINDOW.flip()
-
-        # start playing the mixed sound file
-        self.STIMULUS_SOUND.play()
 
         # stop the precise timer and save whether it was accurate on this trial
         timer_accuracy = self.stop_precise_timer()
@@ -425,17 +432,16 @@ class WordsInNoiseEEG(object):
     def play_stimulus(self):
         # if we are at the movie, play it.  otherwise draw noise
         if self.CONDITION == "Visual":
-            self.MOVIE.seek(0.0)
-            self.MOVIE.setVolume(0.0)
+            # self.MOVIE.seek(0.0)
+            # self.MOVIE.setVolume(0.0)
 
             # play the word and the movie at the same time
             # self.WORD.play()
             self.MOVIE.play()
 
-            # while the movie is still playing, draw it (and the mask if needed)
+            # while the movie is still playing, draw it
             while self.MOVIE.status != visual.FINISHED:
                 self.MOVIE.draw()
-                # if it is not a visual trial, show the noise mask
                 self.EXP_WINDOW.flip()
 
         else:
@@ -458,13 +464,7 @@ class WordsInNoiseEEG(object):
         print "loading ", self.TRIAL_SOUND
         print "remaining trials ", remaining_trials
 
-        # load the movie and make sure the volume is 0.
-        self.MOVIE = visual.MovieStim2(self.EXP_WINDOW,
-            filename ='Movies/'+self.TRIAL_SOUND+'.mov',
-            volume = 0.0,
-            pos = PARAMS['stimuli']['movie']['pos'],
-            size = PARAMS['stimuli']['movie']['size']
-        )
+        self.MOVIE.loadMovie('Movies/'+self.TRIAL_SOUND+'.mov')
         self.MOVIE.setVolume(0.0)
 
         # load the image mask
@@ -492,7 +492,7 @@ class WordsInNoiseEEG(object):
 
 
     def mix_sound_sox(self, noise_file, noise_volume, stimulus_file, stimulus_volume):
-        stimulus_padding = PARAMS['method']['timing']['prestimulus period'] + self.RANDOM_ONSET_TIME
+        stimulus_padding = PARAMS['method']['timing']['prestimulus period'] + PARAMS['method']['timing']['fade movie buffer']+self.RANDOM_ONSET_TIME
         print stimulus_padding
         os.system('sox -V --combine mix -v '+str(noise_volume)+' '+noise_file+' -v '+str(stimulus_volume)+' "|sox '+stimulus_file+' -p pad '+str(stimulus_padding)+' " Sounds/mixed_sound_output.wav')
 
@@ -545,28 +545,33 @@ class WordsInNoiseEEG(object):
 
     def jitter_start_time(self):
 
-        # wait for start time
-        core.wait(self.RANDOM_ONSET_TIME)
+        ISI = core.StaticPeriod()
+        ISI.start(PARAMS['method']['timing']['fade movie buffer'] + self.RANDOM_ONSET_TIME)
 
+        nFrames = PARAMS['method']['timing']['frames to fade movie']
+        opacity_list = numpy.arange(0.0, 1.0, (1.0/nFrames))
 
-    def fade_in_stimulus(self):
+        print "nFRAMES ", nFrames, "OPACITY LIST ", opacity_list
+        #
+        # cue up the movie, even if you aren't using it for timing consistency
 
-        # start the opacity at 0 and get the number of frames to fade the movie over
-        opacity = 0.0
-        nFrames = 30
-
-        print "number of frames ", nFrames
-
-        # start playing the movie but pause on the first frame
         self.MOVIE.play()
         self.MOVIE.pause()
 
-        # fade in the movie over the specified frames
-        for frame in range(nFrames):
-            opacity += (1.0/nFrames)
-            self.MOVIE.setOpacity(opacity)
-            self.MOVIE.draw()
+        for opacity in opacity_list:
+            if self.CONDITION == "Visual": this_stim = self.MOVIE
+            else: this_stim = self.IMAGE_MASK
+            this_stim.setOpacity(opacity)
+            this_stim.draw()
             self.EXP_WINDOW.flip()
+
+        self.MOVIE.loadMovie('Movies/'+self.TRIAL_SOUND+'.mov')
+        self.MOVIE.setVolume(0.0)
+
+
+        ISI.complete()
+
+
 
     def do_rest_period(self):
 
@@ -578,7 +583,6 @@ class WordsInNoiseEEG(object):
         core.wait(PARAMS['method']['timing']['rest block duration'])
 
     def send_ttl_trigger(self, name = None):
-        print name
         # this is not doing anything yet; here is where you would add the code to
         # send the ttl trigger.  It is likely very short, just a few lines
         # and you'll need to use psychopy's parallel library to send it
