@@ -1,6 +1,6 @@
 # Words in Noise EEG
 
-This is a python experiment written by Katie Schuler for Kelly Michaelis and Peter Turkeltaub.
+This is a python experiment written by [Katie Schuler](mailto: kathryn.schuler@gmail.com) for Kelly Michaelis and Peter Turkeltaub.
 
 ## How to
 Detailed instructions for how to modify the parameters of this experiment and run it via PsychoPy are provided on this experiment's wiki page:
