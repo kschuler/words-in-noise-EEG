@@ -5,7 +5,7 @@ This is a python experiment written by Katie Schuler for Kelly Michaelis and Pet
 ## How to
 Detailed instructions for how to modify the parameters of this experiment and run it via PsychoPy are provided on this experiment's wiki page:
 
-- [Words in Noise EEG wiki]()
+- [Words in Noise EEG wiki](https://github.com/kschuler/words-in-noise-EEG/wiki)
 
 
 ## Issues and progress
