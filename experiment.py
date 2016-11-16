@@ -11,7 +11,7 @@ PsychoPy Version: 1.84.1
 
 Written by: Kathryn Schuler (kathryn.schuler@gmail.com)
 Written on: 09/29/2016
-Last Updated: 11/11/2016
+Last Updated: 11/15/2016
 
 Expeirment version: 2.1
 """
@@ -44,7 +44,7 @@ PARAMS = yaml.safe_load(open('params.yaml', 'r'))
 # user-input parameters are set in the params.yaml file and we just
 # get a timestamp for date-run
 PARTICIPANT_INFO = PARAMS['experiment info']['user-input']
-PARTICIPANT_INFO['date-run'] = data.getDateStr()
+PARTICIPANT_INFO['date-run'] = data.getDateStr(format ='%Y-%b-%d-%H%M%S')
 
 if not gui.DlgFromDict(PARTICIPANT_INFO, fixed = 'date', title = PARAMS['experiment info']['exp-name']).OK:
     core.quit()
@@ -63,7 +63,7 @@ class WordsInNoiseEEG(object):
             name            = PARAMS['experiment info']['exp-name'],
             extraInfo       = PARTICIPANT_INFO,
             runtimeInfo     = info.RunTimeInfo,
-            dataFileName    = PARAMS['experiment info']['data-path'] + PARTICIPANT_INFO['subject'] + '_' + PARTICIPANT_INFO['date-run']
+            dataFileName    = PARAMS['experiment info']['data-path'] + PARTICIPANT_INFO['subject'] + '-' + PARTICIPANT_INFO['date-run']
         )
         self.EXP_WINDOW = visual.Window(
             # setup the main experiment window / screen
@@ -184,6 +184,9 @@ class WordsInNoiseEEG(object):
 
         # generate the stiarcase for this experiment from the parameter file
         self.build_the_staircases(PARAMS['staircases'])
+
+        # setup a data folder for the subject's sound files
+        os.mkdir(self.EXPERIMENT_DATA.dataFileName)
 
 
     def display_instructions(self):
@@ -307,8 +310,6 @@ class WordsInNoiseEEG(object):
                         # name = staircase+" "+condition
                         )})
 
-
-
     def intertrial_interval(self, trial_volume, trial_params):
 
         # start the precise timer
@@ -325,7 +326,6 @@ class WordsInNoiseEEG(object):
         # stop the precise timer and save whether it was accurate on this trial
         timer_accuracy = self.stop_precise_timer()
         self.EXPERIMENT_DATA.addData('intertrial_interval', timer_accuracy)
-
 
 
     def prestimulus_period(self, trial_params):
@@ -348,7 +348,6 @@ class WordsInNoiseEEG(object):
         # stop the precise timer and save whether it was accurate on this trial
         timer_accuracy = self.stop_precise_timer()
         self.EXPERIMENT_DATA.addData('prestimulus_period', timer_accuracy)
-
 
 
     def stimulus_presentation_window(self):
@@ -464,14 +463,17 @@ class WordsInNoiseEEG(object):
         print "loading ", self.TRIAL_SOUND
         print "remaining trials ", remaining_trials
 
+
+        # load the movie you'll need and set the volume to 0
         self.MOVIE.loadMovie('Movies/'+self.TRIAL_SOUND+'.mov')
         self.MOVIE.setVolume(0.0)
 
         # load the image mask
-        self.IMAGE_MASK.setTex(numpy.random.random((32,32)))
+        self.IMAGE_MASK.setTex(numpy.random.random((64,64)))
 
         # pull the actual sound file to retrieve duration
         which_sound_file = 'Sounds/'+trial_params['condition']+'/'+trial_params['label']+'/'+self.TRIAL_SOUND+'.wav'
+        name_saved_sound = self.EXPERIMENT_DATA.dataFileName+'/'+PARTICIPANT_INFO['subject']+'-'+trial_params['condition']+'-'+trial_params['staircase']+'-'+trial_params['label']+'-'+self.TRIAL_SOUND+'-vol-'+str(trial_volume)+'.wav'
 
         # get the duration of the sound and calculate jitter
         self.THIS_TRIAL_SOUND.setSound(which_sound_file)
@@ -481,20 +483,21 @@ class WordsInNoiseEEG(object):
         self.mix_sound_sox(noise_file = 'Sounds/noise.wav',
             noise_volume = 1.0,
             stimulus_file = 'Sounds/'+trial_params['condition']+'/'+trial_params['label']+'/'+self.TRIAL_SOUND+'.wav',
-            stimulus_volume = trial_volume)
+            stimulus_volume = trial_volume,
+            output_file_name = name_saved_sound)
 
         # preload the output sound and set it to full volume
-        self.STIMULUS_SOUND.setSound('Sounds/mixed_sound_output.wav')
+        self.STIMULUS_SOUND.setSound(name_saved_sound)
         self.STIMULUS_SOUND.setVolume(1.0)
 
 
         print trial_volume, trial_params
 
 
-    def mix_sound_sox(self, noise_file, noise_volume, stimulus_file, stimulus_volume):
+    def mix_sound_sox(self, noise_file, noise_volume, stimulus_file, stimulus_volume, output_file_name):
         stimulus_padding = PARAMS['method']['timing']['prestimulus period'] + PARAMS['method']['timing']['fade movie buffer']+self.RANDOM_ONSET_TIME
         print stimulus_padding
-        os.system('sox -V --combine mix -v '+str(noise_volume)+' '+noise_file+' -v '+str(stimulus_volume)+' "|sox '+stimulus_file+' -p pad '+str(stimulus_padding)+' " Sounds/mixed_sound_output.wav')
+        os.system('sox -V --combine mix -v '+str(noise_volume)+' '+noise_file+' -v '+str(stimulus_volume)+' "|sox '+stimulus_file+' -p pad '+str(stimulus_padding)+' " '+output_file_name)
 
 
     def start_precise_timer(self, duration):
