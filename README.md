@@ -4,7 +4,7 @@ This is a python experiment written by [Katie Schuler](mailto: kathryn.schuler@g
 
 ## Getting started
 
-The easiest way to get the most up to date version of the experiment is to click the green `Clone or download` button in the upper right corner. Or simply clone this repository in the command line with the command below.  Previous versions of the experiment can be found on the [release page](https://github.com/kschuler/words-in-noise-EEG/releases).
+The easiest way to get the current version of the experiment is to click the green `Clone or download` button in the upper right corner. Or simply clone this repository in the command line with the command below.  Previous versions of the experiment can be found on the [release page](https://github.com/kschuler/words-in-noise-EEG/releases).
 
 ```
 git clone https://github.com/kschuler/words-in-noise-EEG.git
