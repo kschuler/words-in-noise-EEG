@@ -2,7 +2,13 @@
 
 This is a python experiment written by [Katie Schuler](mailto: kathryn.schuler@gmail.com) for Kelly Michaelis and Peter Turkeltaub.
 
-## How to
+## How to run this experiment
+The easiest way to get the most up to date version of the experiment is to click the green `Clone or download` button or to clone this repository in the command line with the command below.  Previous versions of the experiment can be found on the [release page](https://github.com/kschuler/words-in-noise-EEG/releases).
+
+```
+git clone https://github.com/kschuler/words-in-noise-EEG.git
+```
+
 Detailed instructions for how to modify the parameters of this experiment and run it via PsychoPy are provided on this experiment's wiki page:
 
 - [Words in Noise EEG wiki](https://github.com/kschuler/words-in-noise-EEG/wiki)
