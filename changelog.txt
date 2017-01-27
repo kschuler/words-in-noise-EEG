@@ -10,3 +10,10 @@
 
 11-14-2016
 - fixed image fade_in.  required reloading movie file so it could start at beginning and be time aligned.
+
+01-12-2016
+- allow researcher to select conditions and word list
+- replace gabor patch with a random visually matched image in "Facemorphs" folder
+- only load movies when we are in the visual condition
+- replace "_" with " " (space) in answer choices rendered to the screen
+- add stepType to the staircases

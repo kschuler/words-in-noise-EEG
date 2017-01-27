@@ -1,0 +1,5 @@
+.maxVal,.nDown,.staircase,.minVal,.stepType,.label,.stepSizes,.nUp,.startVal,.condition,.thisIndex,.thisRepN,.thisN,.direction,.stepSize,.intensity,actual_onset_time,actual_offset_time,intertrial_interval,prestimulus_period,stimulus_presentation_window,poststimulus_waiting_period,correct_answer,answer_choice_position,answer_choice,is_correct,RT,.response,wordlist,gender,date-run,hand,conditions,subject,
+None,1,baseline,0.05,db,easy,4,3,2.0,Auditory,0,1,0,start,4,2.0,0.3,1.50120836698,1,1,1,1,code,right,cold,False,40.3340780735,False,list2.yaml,male,2017-Jan-19-115617,left,['Auditory'],t,
+None,1,baseline,0.05,db,hard,4,1,2.0,Auditory,1,1,1,start,4,2.0,1.33333333333,2.3677083343,1,1,1,1,stool,left,stool,True,49.269701004,True,list2.yaml,male,2017-Jan-19-115617,left,['Auditory'],t,
+None,1,baseline,0.05,db,easy,4,3,2.0,Auditory,0,2,2,up,4,3.16978638492,1.58333333333,2.55097918401,1,1,1,1,tie,right,tie,True,58.3495051861,True,list2.yaml,male,2017-Jan-19-115617,left,['Auditory'],t,
+None,1,baseline,0.05,db,hard,4,1,2.0,Auditory,1,2,3,down,4,1.26191468896,0.95,2.05110417465,1,1,1,1,mend,NA,NA,False,NA,False,list2.yaml,male,2017-Jan-19-115617,left,['Auditory'],t,

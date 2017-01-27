@@ -14,6 +14,20 @@ experiment info:
         hand:                               # provides a list of options for handedness in gui
             - left
             - right
+        conditions:
+            - [Auditory]
+            - [Visual]
+            - [Environmental]
+            - [Phoneme]
+            - [Phoneme, Environmental]
+            - [Auditory, Visual]
+            - [Auditory, Environmental]
+            - [Auditory, Phoneme]
+            - [Auditory, Environmental, Visual]
+            - [Auditory, Environmental, Visual, Phoneme]
+        wordlist:
+            - list1.yaml
+            - list2.yaml
 devices:
     monitor:                                # sets the parameters for the visual.Window ()
         screen: 0                           # which screen we are using
@@ -29,32 +43,32 @@ devices:
         keys quit: [escape]                 # Keys that will quit
         keys next: [space]                  # Keys that will move to the next thing (like for instructions)
 method:
-    conditions:                             # a list of the conditions in the experiment
-        - Auditory
-        - Visual
-        - Environmental
+    # conditions:                             # a list of the conditions in the experiment
+    #     - Auditory
+    #     - Visual
+    #     - Environmental
     reps:
         baseline staircase:
-            blocks per condition: 1        # number of blocks per conditions
-            trials per block: 6             # number of trials to do in each block
-            trials per staircase: 12         # number of trials
-            rest after blocks: [1, 3]       # blocks we should do rest after
+            blocks per condition: 2        # number of blocks per conditions
+            trials per block: 10             # number of trials to do in each block
+            trials per staircase: 20         # number of trials
+            rest after blocks: [3, 6]       # blocks we should do rest after
         main staircase:
-            blocks per condition: 1
-            trials per block: 6
-            trials per staircase: 12
-            rest after blocks: [1, 3]
+            blocks per condition: 10
+            trials per block: 20
+            trials per staircase: 100
+            rest after blocks: [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38]
     timing:
         block title screen: 1.0             # how long in seconds is the block title screen?
         intertrial interval: 2.0            # how long in seconds is the intertrial interval? (here is where you load stims)
         stimulus presentation window: 4.0   # ***** how long in seconds is the stimulus presentation window?
         prestimulus period: 1.0             # how long in seconds is the prestimulus period
         post stimulus waiting period: 1.0   # how long in seconds is the post stimulus waiting period?
-        rest block duration: 2.0            # how long in seconds is the rest block duration?
+        rest block duration: 30.0            # how long in seconds is the rest block duration?
         stimulus offset buffer: 1.0         #  ***** how longer is seconds is the stimulus offset buffer?
         frames to fade movie: 30            #  *****   how many frames should we fade the movie for?
         fade movie buffer: 1.0              # how long in seconds do you want to devote to fading in the movie?
-        answer choice timeout: 3.0          # how long before we timeout the answer choice?
+        answer choice timeout: 5.0          # how long before we timeout the answer choice?
 
 stimuli:
     instructions:
@@ -64,10 +78,10 @@ stimuli:
         color: gray
         font: Arial
         pages:
-            - Page 1. Space to continue...
-            - Page 2. Space to continue...
-            - Page 3. Space to continue...
-            - Page 4. Space to continue...
+            - In this experiment you will be asked to identify English words, letter combinations, or environmental sounds. Sometimes you will just hear a word or sound, other times you will see a video of a person saying a word. Space to continue...
+            - The items may be difficult to understand. An H at the beginning of the trial means the item will be harder to understand, an E means it will be easier. Listen carefully and try to figure out what you heard. Space to continue...
+            - After you listen to the item, you will be given four choices. Use the 4 arrow keys to choose the answer that best matches what you heard. Space to continue...
+            - For example, if what you heard matches the answer on the top of the screen, press the up arrow. Press space to start the experiment...
         rest instructions: You will now be given a 2 minute break.  The experiment will resume automatically.
     block title:
         units: pix
@@ -88,11 +102,9 @@ stimuli:
         color: gray
         font: Arial
     image mask:
-        tex: 256
-        mask: 'gauss'               # what do you want the mask to be?  'gauss' gives gabor; 'circle' gives circular patch
-        size: [300, 400]
+        pos: [0, 0]               # what do you want the mask to be?  'gauss' gives gabor; 'circle' gives circular patch
+        size: [564, 306]
         units: pix
-        array size: [32, 32]              #
     movie:
         pos: [0,0]
         size: [720, 400]
@@ -132,22 +144,24 @@ staircases:
                 staircase: baseline         # which staircase we are doing (for marking data)
                 label: easy                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Auditory         # the condition we are doing (for marking data)
-                startVal: 1.0              # a number; the initial value of the staircase
+                startVal: 2.0              # a number; the initial value of the staircase
                 stepSizes: 4               # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
             hard:
                 staircase: baseline         # which staircase we are doing (for marking data)
                 label: hard                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Auditory         # the condition we are doing (for marking data)
-                startVal: 1.0              # a number; the initial value of the staircase
+                startVal: 2.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 1                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
         Visual:
             easy:
                 staircase: baseline         # which staircase we are doing (for marking data)
@@ -155,41 +169,68 @@ staircases:
                 condition: Visual         # the condition we are doing (for marking data)
                 startVal: 1.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
             hard:
                 staircase: baseline         # which staircase we are doing (for marking data)
                 label: hard                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Visual         # the condition we are doing (for marking data)
                 startVal: 1.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 1                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
         Environmental:
             easy:
                 staircase: baseline         # which staircase we are doing (for marking data)
                 label: easy                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Environmental         # the condition we are doing (for marking data)
-                startVal: 1.0              # a number; the initial value of the staircase
-                stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                startVal: 4.0              # a number; the initial value of the staircase
+                stepSizes: 2             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
             hard:
                 staircase: baseline         # which staircase we are doing (for marking data)
                 label: hard                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Environmental         # the condition we are doing (for marking data)
-                startVal: 1.0              # a number; the initial value of the staircase
-                stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                startVal: 4.0              # a number; the initial value of the staircase
+                stepSizes: 2             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 1                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+        Phoneme:
+            easy:
+                staircase: baseline         # which staircase we are doing (for marking data)
+                label: easy                 # 'easy' or 'hard'; label for which sub-staircase this is
+                condition: Phoneme         # the condition we are doing (for marking data)
+                startVal: 2.0              # a number; the initial value of the staircase
+                stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
+                nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
+                nDown: 1                    # the number of 'correct' responses before the staircase level decreases
+                minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+            hard:
+                staircase: baseline         # which staircase we are doing (for marking data)
+                label: hard                 # 'easy' or 'hard'; label for which sub-staircase this is
+                condition: Phoneme         # the condition we are doing (for marking data)
+                startVal: 2.0              # a number; the initial value of the staircase
+                stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
+                nUp: 1                      # the number of 'incorrect' responses before the staircase level increases
+                nDown: 1                    # the number of 'correct' responses before the staircase level decreases
+                minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
     main staircase:
         Auditory:
             easy:
@@ -198,20 +239,22 @@ staircases:
                 condition: Auditory         # the condition we are doing (for marking data)
                 startVal: 1.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
             hard:
                 staircase: main         # which staircase we are doing (for marking data)
                 label: hard                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Auditory         # the condition we are doing (for marking data)
                 startVal: 1.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 1                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
         Visual:
             easy:
                 staircase: main         # which staircase we are doing (for marking data)
@@ -219,38 +262,65 @@ staircases:
                 condition: Visual         # the condition we are doing (for marking data)
                 startVal: 1.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
             hard:
                 staircase: main         # which staircase we are doing (for marking data)
                 label: hard                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Visual         # the condition we are doing (for marking data)
                 startVal: 1.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 1                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
         Environmental:
             easy:
                 staircase: main         # which staircase we are doing (for marking data)
                 label: easy                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Environmental         # the condition we are doing (for marking data)
-                startVal: 1.0              # a number; the initial value of the staircase
+                startVal: 4.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
             hard:
                 staircase: main         # which staircase we are doing (for marking data)
                 label: hard                 # 'easy' or 'hard'; label for which sub-staircase this is
                 condition: Environmental         # the condition we are doing (for marking data)
-                startVal: 1.0              # a number; the initial value of the staircase
+                startVal: 4.0              # a number; the initial value of the staircase
                 stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
                 nUp: 1                      # the number of 'incorrect' responses before the staircase level increases
                 nDown: 1                    # the number of 'correct' responses before the staircase level decreases
                 minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
-                maxVal: 1.0                 # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+        Phoneme:
+            easy:
+                staircase: main         # which staircase we are doing (for marking data)
+                label: easy                 # 'easy' or 'hard'; label for which sub-staircase this is
+                condition: Phoneme         # the condition we are doing (for marking data)
+                startVal: 1.0              # a number; the initial value of the staircase
+                stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
+                nUp: 3                      # the number of 'incorrect' responses before the staircase level increases
+                nDown: 1                    # the number of 'correct' responses before the staircase level decreases
+                minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
+            hard:
+                staircase: main         # which staircase we are doing (for marking data)
+                label: hard                 # 'easy' or 'hard'; label for which sub-staircase this is
+                condition: Phoneme         # the condition we are doing (for marking data)
+                startVal: 1.0              # a number; the initial value of the staircase
+                stepSizes: 4             # the size of steps (how much intensity to go up per step)
+                stepType: db
+                nUp: 1                      # the number of 'incorrect' responses before the staircase level increases
+                nDown: 1                    # the number of 'correct' responses before the staircase level decreases
+                minVal: 0.05                # None or a number; the smallest legal value for the staircase; prevents it from reaching impossible values
+                maxVal: None                  # None or a number; The largest legal value for the staircase; prevents it from reaching impossible values
